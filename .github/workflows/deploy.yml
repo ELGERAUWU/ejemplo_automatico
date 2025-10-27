@@ -1,4 +1,4 @@
-name:  app de ejemplo
+name: app ejemplo
 
 on:
   push:
@@ -12,34 +12,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-# --- PASOS AÑADIDOS PARA COMPILAR (BUILD) ---
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2' # <-- Cambia esto a tu versión de PHP si es necesario
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18' # <-- Cambia esto a tu versión de Node si es necesario
-
-      - name: Install Composer Dependencies
-        run: composer install --no-dev --optimize-autoloader
-
-      - name: Install NPM Dependencies
-        run: npm install
-
-      - name: Build Frontend Assets
-        run: npm run build
-# --- FIN DE LOS PASOS AÑADIDOS ---
-
       - name: Deploy backend (Laravel)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /laravel/
+          server-dir: /proyectox/
           exclude: |
             public/**
             */.git
@@ -49,12 +28,3 @@ jobs:
             */tests/*
             **/.env.example
             **/README.md
-            
-      - name: Deploy public assets
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: public/ # <-- Este paso ahora SÍ encontrará la carpeta
-          server-dir: /
